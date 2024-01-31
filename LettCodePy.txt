@@ -1,0 +1,51 @@
+class Solution(object):
+    def strStr(self, haystack, needle):
+
+        if not needle:
+            return 0
+
+        for i in range(len(haystack) - len(needle) + 1):
+            if haystack[i:i + len(needle)] == needle:
+                return i
+
+        return -1
+
+# Пример использования:
+solution = Solution()
+haystack1 = "sadbutsad"
+needle1 = "sad"
+result1 = solution.strStr(haystack1, needle1)
+print(result1)  # Вывод: 0
+
+haystack2 = "leetcode"
+needle2 = "leeto"
+result2 = solution.strStr(haystack2, needle2)
+print(result2)  # Вывод: -1
+
+==============================================================================================
+
+class Solution(object):
+    def lengthOfLastWord(self, s):
+        # Удаляем пробелы в конце строки
+        s = s.rstrip()
+        
+        # Разбиваем строку по пробелам
+        words = s.split(' ')
+        
+        # Возвращаем длину последнего слова
+        return len(words[-1])
+
+# Примеры использования
+solution = Solution()
+
+input1 = "Hello World"
+output1 = solution.lengthOfLastWord(input1)
+print(output1)  # Вывод: 5
+
+input2 = "   fly me   to   the moon  "
+output2 = solution.lengthOfLastWord(input2)
+print(output2)  # Вывод: 4
+
+input3 = "luffy is still joyboy"
+output3 = solution.lengthOfLastWord(input3)
+print(output3)  # Вывод: 6
