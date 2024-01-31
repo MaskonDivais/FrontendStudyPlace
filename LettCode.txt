@@ -348,20 +348,21 @@ function expect(value) {
     return {
         toBe: function(compareValue) {
             if (value === compareValue) {
-                return { value: true };
+                return true ;
             } else {
                 throw new Error("Not Equal");
             }
         },
         notToBe: function(compareValue) {
             if (value !== compareValue) {
-                return { value: true };
+                return true ;
             } else {
                 throw new Error("Equal");
             }
         }
     };
 }
+
 
 // Example 1
 const func1 = () => expect(5).toBe(5);
@@ -380,3 +381,314 @@ const func3 = () => expect(5).notToBe(null);
 console.log(func3()); // Output: {"value": true}
 
 //====================================================================================================================================================================================================================================//
+
+function isEmpty(obj) {
+    if (Array.isArray(obj)) {
+        return obj.length === 0;
+    } else if (typeof obj === 'object' && obj !== null) {
+        return Object.keys(obj).length === 0;
+    } else {
+        return false;
+    }
+}
+
+// Example 1
+const obj1 = {"x": 5, "y": 42};
+console.log(isEmpty(obj1)); // Output: false
+
+// Example 2
+const obj2 = {};
+console.log(isEmpty(obj2)); // Output: true
+
+// Example 3
+const arr = [null, false, 0];
+console.log(isEmpty(arr)); // Output: false
+
+//====================================================================================================================================================================================================================================//
+
+class Calculator {
+
+    constructor(value) {
+        this.result = value;
+    }
+
+
+    add(value) {
+        this.result += value;
+        return this;
+    }
+
+
+    subtract(value) {
+        this.result -= value;
+        return this;
+    }
+
+
+    multiply(value) {
+        this.result *= value;
+        return this;
+    }
+
+
+    divide(value) {
+        if (value === 0) {
+            throw new Error("Division by zero is not allowed");
+        }
+        this.result /= value;
+        return this;
+    }
+
+
+    power(value) {
+        this.result = Math.pow(this.result, value);
+        return this;
+    }
+
+    getResult() {
+        return this.result;
+    }
+}
+
+// Example usage:
+const calculator = new Calculator(10);
+const result = calculator.add(5).subtract(3).multiply(2).divide(2).power(2).getResult();
+console.log(result); // Output: 24
+
+//====================================================================================================================================================================================================================================//
+
+/**
+ * @param {Function} fn
+ * @param {Array} args
+ * @param {number} t
+ * @return {Function}
+ */
+var cancellable = function(fn, args, t) {
+    let result = [];
+    let timerId;
+
+    function execute() {
+        const diff = Math.floor(performance.now() - start);
+        result.push({ time: diff, returned: fn(...args) });
+        timerId = setTimeout(execute, t);
+    }
+
+    execute();
+
+    function cancelFn() {
+        clearTimeout(timerId);
+    }
+
+    return cancelFn;
+};
+
+const result = [];
+
+const fn = (x) => x * 2;
+const args = [4], t = 35, cancelTimeMs = 190;
+
+const start = performance.now();
+
+const log = (...argsArr) => {
+    const diff = Math.floor(performance.now() - start);
+    result.push({ time: diff, returned: fn(...argsArr) });
+};
+    
+const cancel = cancellable(log, args, t);
+
+setTimeout(cancel, cancelTimeMs);
+
+setTimeout(() => {
+    console.log(result);
+    // [
+    //   {"time":0,"returned":8},
+    //   {"time":35,"returned":8},
+    //   {"time":70,"returned":8},
+    //   {"time":105,"returned":8},
+    //   {"time":140,"returned":8},
+    //   {"time":175,"returned":8}
+    // ]
+}, cancelTimeMs + t + 15);
+
+//====================================================================================================================================================================================================================================//
+
+var twoSum = function(nums, target) {
+    let result = [];
+        for(let i = 0; i<nums.length; i++){
+            for(let j = 0; j<nums.length; j++){
+                sum = nums[i] + nums[j];
+
+                if(i !== j){
+                    if(sum == target){
+                        result.push(i);
+                    }
+                }
+            }
+            sum = 0;
+        }
+    return result;
+};
+
+let nums = [1,7,2, 11,15], target = 9;
+const res = twoSum(nums, target);
+console.log(res);
+
+
+var twoSum = function(nums, target) {
+  let map = new Map()
+  for(let i=0;i<nums.length;i++){
+      let complement = target - nums[i];
+      if(map.has(complement))
+        return [map.get(complement),i]
+    map.set(nums[i],i)
+  } 
+  
+};
+
+//====================================================================================================================================================================================================================================//
+
+var isPalindrome = function(x) {
+    // Edge cases
+    if (x < 0 || (x % 10 === 0 && x !== 0)) {
+        return false;
+    }
+
+    // Reverse the last half of the number
+    let reversedHalf = 0;
+    while (x > reversedHalf) {
+        reversedHalf = reversedHalf * 10 + x % 10;
+        x = Math.floor(x / 10);
+    }
+
+    // If x has odd number of digits, remove the middle digit
+    // as it doesn't affect palindrome check
+    if (x === reversedHalf || x === Math.floor(reversedHalf / 10)) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+// Test cases
+console.log(isPalindrome(121));  // Output: true
+console.log(isPalindrome(-121)); // Output: false
+console.log(isPalindrome(10));   // Output: false
+
+//====================================================================================================================================================================================================================================//
+
+var romanToInt = function(s) {
+    const romanNumerals = {
+        'I': 1,
+        'V': 5,
+        'X': 10,
+        'L': 50,
+        'C': 100,
+        'D': 500,
+        'M': 1000,
+    };
+
+    let total = 0;
+    let prevValue = 0;
+
+    for (let i = s.length - 1; i >= 0; i--) {
+        const currentValue = romanNumerals[s[i]];
+
+        if (currentValue < prevValue) {
+            total -= currentValue;
+        } else {
+            total += currentValue;
+        }
+
+        prevValue = currentValue;
+    }
+
+    return total;
+};
+
+// Test cases
+console.log(romanToInt("III"));      // Output: 3
+console.log(romanToInt("LVIII"));    // Output: 58
+console.log(romanToInt("MCMXCIV"));  // Output: 1994
+
+//====================================================================================================================================================================================================================================//
+
+var isValid = function(s) {
+    const stack = [];
+    const parenthesesMap = {
+        ')': '(',
+        '}': '{',
+        ']': '['
+    };
+
+    for (let i = 0; i < s.length; i++) {
+        const char = s.charAt(i);
+
+        if (parenthesesMap[char]) {
+          
+            const topElement = stack.length === 0 ? '#' : stack.pop();
+            if (topElement !== parenthesesMap[char]) {
+                return false;
+            }
+        } else {
+            
+            stack.push(char);
+        }
+    }
+
+    return stack.length === 0;
+};
+
+//====================================================================================================================================================================================================================================//
+
+var removeDuplicates = function(nums) {
+  if (nums.length === 0) {
+    return 0;
+  }
+
+  let uniqueCount = 1;
+  for (let i = 1; i < nums.length; i++) {
+    if (nums[i] !== nums[i - 1]) {
+      nums[uniqueCount] = nums[i];
+      uniqueCount++;
+    }
+  }
+
+  return uniqueCount;
+};
+
+
+
+
+const nums1 = [1, 1, 2];
+const res = removeDuplicates(nums1);
+// Output: 2, nums1 = [1, 2, _]
+console.log(res, nums1);
+
+//====================================================================================================================================================================================================================================//
+
+var removeElement = function(nums, val) {
+  let nonValCount = 0;
+
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== val) {
+      nums[nonValCount] = nums[i];
+      nonValCount++;
+    }
+  }
+
+  return nonValCount;
+};
+
+// Example usage:
+const nums1 = [3, 2, 2, 3];
+const val1 = 3;
+const k1 = removeElement(nums1, val1);
+console.log(k1); // Output: 2, nums1 = [2, 2, _, _]
+
+const nums2 = [0, 1, 2, 2, 3, 0, 4, 2];
+const val2 = 2;
+const k2 = removeElement(nums2, val2);
+console.log(k2); // Output: 5, nums2 = [0, 1, 4, 0, 3, _, _, _]
+
+//====================================================================================================================================================================================================================================//
+
